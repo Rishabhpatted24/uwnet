@@ -49,7 +49,7 @@ matrix forward_connected_layer(layer l, matrix x)
     *l.x = copy_matrix(x);
 
     // TODO: 3.1 - run the network forward
-    matrix y = matmul(x, l.w); // Going to want to change this!
+    matrix y = matmul(x, l.w);
     y = forward_bias(y, l.b);
 
     return y;
@@ -67,6 +67,9 @@ matrix backward_connected_layer(layer l, matrix dy)
     // Calculate the gradient dL/db for the bias terms using backward_bias
     // add this into any stored gradient info already in l.db
 
+    
+    matrix db = backward_bias(dy);
+    
     // Then calculate dL/dw. Use axpy to add this dL/dw into any previously stored
     // updates for our weights, which are stored in l.dw
 
