@@ -49,8 +49,8 @@ matrix forward_connected_layer(layer l, matrix x)
     *l.x = copy_matrix(x);
 
     // TODO: 3.1 - run the network forward
-    matrix y = make_matrix(x.rows, l.w.cols); // Going to want to change this!
-
+    matrix y = matmul(x, l.w); // Going to want to change this!
+    y = forward_bias(y, l.b);
 
     return y;
 }

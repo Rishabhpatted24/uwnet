@@ -25,6 +25,36 @@ matrix forward_activation_layer(layer l, matrix x)
     // lrelu(x)    = x if x > 0 else .01 * x
     // softmax(x)  = e^{x_i} / sum(e^{x_j}) for all x_j in the same row 
 
+    if (a == LOGISTIC) {
+        for (int i = 0; i < x.rows * x.cols; i++) {
+            y.data[i] =  1 / (1 + exp(-1 * x.data[i]));
+        }
+    } else if (a == RELU) {
+        for (int i = 0; i < x.rows * x.cols; i++) {
+            y.data[i] = (x.data[i] > 0) ? x.data[i] : 0;
+        }
+    } else if (a == LRELU) {
+        for (int i = 0; i < x.rows * x.cols; i++) {
+            y.data[i] = (x.data[i] > 0) ? x.data[i] : 0.01 * x.data[i];
+        }
+    } else if (a == SOFTMAX) {
+        int tmp[x.rows];
+
+        for (int i = 0; i <  x.rows; i++) {
+            int sum = 0;
+            for (int j = 0; j < x.cols; j++) {
+                sum += exp(x.data[i * x.cols + j]);
+            }
+            tmp[i] = sum;
+        }
+
+        for (int i = 0; i < x.rows; i++) {
+            for (int j = 0; j < x.cols; j++) {
+                y.data[i * y.cols + j] = (exp(x.data[i * x.cols + j])) / tmp[i];
+            }
+        }
+    }
+
     return y;
 }
 
@@ -48,6 +78,27 @@ matrix backward_activation_layer(layer l, matrix dy)
     // d/dx lrelu(x)    = 1 if x > 0 else 0.01
     // d/dx softmax(x)  = 1
 
+    if (a == LOGISTIC) {
+        for (int i = 0; i < dy.rows * dy.cols; i++) {
+            double val =  1/(1+exp(-1 * x.data[i]));
+            dx.data[i] = (val  * (1 - val)) * dy.data[i];
+           // dx.data[i] *= dy.data[i];
+        }
+    } else if (a == RELU) {
+        for (int i = 0; i < dy.rows * dy.cols; i++) {
+            dx.data[i] = (x.data[i] > 0) ? 1 : 0;
+            dx.data[i] *= dy.data[i];
+        }
+    } else if (a == LRELU) {
+        for (int i = 0; i < dy.rows * dy.cols; i++) {
+           dx.data[i] = (x.data[i] > 0) ? 1 : 0.01;
+           dx.data[i] *= dy.data[i];
+        }
+    } else if (a == SOFTMAX) {
+        for (int i = 0; i < dx.rows * dy.cols; i++) {
+            dx.data[i] = 1 * dy.data[i];
+        }
+    }
     return dx;
 }
 
