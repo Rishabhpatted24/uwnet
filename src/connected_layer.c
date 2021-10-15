@@ -66,16 +66,14 @@ matrix backward_connected_layer(layer l, matrix dy)
     // TODO: 3.2
     // Calculate the gradient dL/db for the bias terms using backward_bias
     // add this into any stored gradient info already in l.db
-
-    
-    matrix db = backward_bias(dy);
+    axpy_matrix(1, backward_bias(dy), l.db);
     
     // Then calculate dL/dw. Use axpy to add this dL/dw into any previously stored
     // updates for our weights, which are stored in l.dw
+    axpy_matrix(1, transpose_matrix(matmul(transpose_matrix(dy), x)), l.dw);
 
     // Calculate dL/dx and return it
-    matrix dx = copy_matrix(x); // Change this
-
+    matrix dx = matmul(dy, transpose_matrix(l.w));
 
     return dx;
 }

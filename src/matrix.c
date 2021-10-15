@@ -99,8 +99,8 @@ matrix matmul(matrix a, matrix b)
     matrix c = make_matrix(a.rows, b.cols);
     // TODO: 1.4 - Implement matrix multiplication. Make sure it's fast!
     for (int i = 0; i < a.rows; i++) {
-        for (int j = 0; j < b.cols; j++) {
-            for (int k = 0; k < a.cols; k++) {
+        for (int k = 0; k < a.cols; k++) {
+            for (int j = 0; j < b.cols; j++) {
                 c.data[i * c.cols + j] += a.data[i * a.cols + k] * b.data[k * b.cols + j];
             }
         }
