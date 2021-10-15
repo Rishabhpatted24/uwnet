@@ -66,11 +66,11 @@ matrix backward_connected_layer(layer l, matrix dy)
     // TODO: 3.2
     // Calculate the gradient dL/db for the bias terms using backward_bias
     // add this into any stored gradient info already in l.db
-    axpy_matrix(1, backward_bias(dy), l.db);
+    axpy_matrix(1.0, backward_bias(dy), l.db);
     
     // Then calculate dL/dw. Use axpy to add this dL/dw into any previously stored
     // updates for our weights, which are stored in l.dw
-    axpy_matrix(1, transpose_matrix(matmul(transpose_matrix(dy), x)), l.dw);
+    axpy_matrix(1.0, transpose_matrix(matmul(transpose_matrix(dy), x)), l.dw);
 
     // Calculate dL/dx and return it
     matrix dx = matmul(dy, transpose_matrix(l.w));
@@ -93,11 +93,11 @@ void update_connected_layer(layer l, float rate, float momentum, float decay)
     // lastly, l.dw is the negative update (-update) but for the next iteration
     // we want it to be (-momentum * update) so we just need to scale it a little
     axpy_matrix(decay, l.w, l.dw);
-    axpy_matrix(-1 * rate, l.dw, l.w);
+    axpy_matrix(-1.0 * rate, l.dw, l.w);
     scal_matrix(momentum, l.dw);
 
     // Do the same for biases as well but no need to use weight decay on biases
-    axpy_matrix(-1 * rate, l.db, l.b);
+    axpy_matrix(-1.0 * rate, l.db, l.b);
     scal_matrix(momentum, l.db);
 }
 
