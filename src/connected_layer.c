@@ -49,7 +49,7 @@ matrix forward_connected_layer(layer l, matrix x)
     *l.x = copy_matrix(x);
 
     // TODO: 3.1 - run the network forward
-    matrix y = matmul(x, l.w); // Going to want to change this!
+    matrix y = matmul(x, l.w);
     y = forward_bias(y, l.b);
 
     return y;
@@ -70,6 +70,9 @@ matrix backward_connected_layer(layer l, matrix dy)
     axpy_matrix(1.0, dldb, l.db);
     free_matrix(dldb);
 
+    
+    matrix db = backward_bias(dy);
+    
     // Then calculate dL/dw. Use axpy to add this dL/dw into any previously stored
     // updates for our weights, which are stored in l.dw
     matrix x_t = transpose_matrix(x);
