@@ -27,7 +27,7 @@ matrix forward_activation_layer(layer l, matrix x)
 
     if (a == LOGISTIC) {
         for (int i = 0; i < x.rows * x.cols; i++) {
-            y.data[i] =  1 / (1 + exp(-1 * x.data[i]));
+            y.data[i] =  1 / (1 + exp(-1.0 * x.data[i]));
         }
     } else if (a == RELU) {
         for (int i = 0; i < x.rows * x.cols; i++) {
@@ -38,10 +38,10 @@ matrix forward_activation_layer(layer l, matrix x)
             y.data[i] = (x.data[i] > 0) ? x.data[i] : 0.01 * x.data[i];
         }
     } else if (a == SOFTMAX) {
-        int tmp[x.rows];
+        float tmp[x.rows];
 
         for (int i = 0; i <  x.rows; i++) {
-            int sum = 0;
+            float sum = 0;
             for (int j = 0; j < x.cols; j++) {
                 sum += exp(x.data[i * x.cols + j]);
             }
@@ -86,17 +86,17 @@ matrix backward_activation_layer(layer l, matrix dy)
         }
     } else if (a == RELU) {
         for (int i = 0; i < dy.rows * dy.cols; i++) {
-            dx.data[i] = (x.data[i] > 0) ? 1 : 0;
+            dx.data[i] = (x.data[i] > 0) ? 1.0 : 0;
             dx.data[i] *= dy.data[i];
         }
     } else if (a == LRELU) {
         for (int i = 0; i < dy.rows * dy.cols; i++) {
-           dx.data[i] = (x.data[i] > 0) ? 1 : 0.01;
+           dx.data[i] = (x.data[i] > 0) ? 1.0 : 0.01;
            dx.data[i] *= dy.data[i];
         }
     } else if (a == SOFTMAX) {
         for (int i = 0; i < dx.rows * dy.cols; i++) {
-            dx.data[i] = 1 * dy.data[i];
+            dx.data[i] = 1.0 * dy.data[i];
         }
     }
     return dx;
