@@ -48,7 +48,6 @@ matrix forward_connected_layer(layer l, matrix x)
     free_matrix(*l.x);
     *l.x = copy_matrix(x);
 
-    // TODO: 3.1 - run the network forward
     matrix y = matmul(x, l.w);
     y = forward_bias(y, l.b);
 
@@ -63,7 +62,7 @@ matrix backward_connected_layer(layer l, matrix dy)
 {
     matrix x = *l.x;
 
-    // TODO: 3.2
+
     // Calculate the gradient dL/db for the bias terms using backward_bias
     // add this into any stored gradient info already in l.db
     matrix dldb = backward_bias(dy);
@@ -96,7 +95,7 @@ matrix backward_connected_layer(layer l, matrix dy)
 // float decay: l2 normalization term
 void update_connected_layer(layer l, float rate, float momentum, float decay)
 {
-    // TODO: 3.3
+ 
     // Apply our updates using our SGD update rule
     // assume  l.dw = dL/dw - momentum * update_prev
     // we want l.dw = dL/dw - momentum * update_prev + decay * w
