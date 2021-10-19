@@ -5,7 +5,6 @@
 #include <assert.h>
 #include <math.h>
 
-
 // Make empty matrix filled with zeros
 // int rows: number of rows in matrix
 // int cols: number of columns in matrix
@@ -51,7 +50,7 @@ void free_matrix(matrix m)
 matrix copy_matrix(matrix m)
 {
     matrix c = make_matrix(m.rows, m.cols);
-    // TODO: 1.1 - Fill in the new matrix
+    
     for (int i = 0; i < m.rows * m.cols; i++) {
         c.data[i] = m.data[i];
     }
@@ -64,7 +63,6 @@ matrix copy_matrix(matrix m)
 // returns: matrix, result of transposition
 matrix transpose_matrix(matrix m)
 {
-    // TODO: 1.2 - Make a matrix the correct size, fill it in
     matrix t = make_matrix(m.cols,m.rows);
     for (int i = 0; i < t.rows; i++) {
         for (int j = 0; j < t.cols; j++) {
@@ -83,7 +81,6 @@ void axpy_matrix(float a, matrix x, matrix y)
 {
     assert(x.cols == y.cols);
     assert(x.rows == y.rows);
-    // TODO: 1.3 - Perform the weighted sum, store result back in y
 
     for (int i = 0; i < x.rows * x.cols; i++) {
         y.data[i] += a * x.data[i];
@@ -97,7 +94,7 @@ matrix matmul(matrix a, matrix b)
 {
     assert(a.cols == b.rows);
     matrix c = make_matrix(a.rows, b.cols);
-    // TODO: 1.4 - Implement matrix multiplication. Make sure it's fast!
+
     for (int i = 0; i < a.rows; i++) {
         for (int k = 0; k < a.cols; k++) {
             for (int j = 0; j < b.cols; j++) {
@@ -166,14 +163,18 @@ matrix augment_matrix(matrix m)
 matrix matrix_invert(matrix m)
 {
     int i, j, k;
+    
     //print_matrix(m);
+    
     matrix none = {0};
     if(m.rows != m.cols){
         fprintf(stderr, "Matrix not square\n");
         return none;
     }
     matrix c = augment_matrix(m);
+    
     //print_matrix(c);
+    
     float **cdata = calloc(c.rows, sizeof(float *));
     for(i = 0; i < c.rows; ++i){
         cdata[i] = c.data + i*c.cols;
@@ -222,7 +223,9 @@ matrix matrix_invert(matrix m)
             }
         }
     }
+
     //print_matrix(c);
+    
     matrix inv = make_matrix(m.rows, m.cols);
     for(i = 0; i < m.rows; ++i){
         for(j = 0; j < m.cols; ++j){
@@ -231,7 +234,9 @@ matrix matrix_invert(matrix m)
     }
     free_matrix(c);
     free(cdata);
+
     //print_matrix(inv);
+    
     return inv;
 }
 
@@ -293,3 +298,4 @@ void test_matrix()
         }
     }
 }
+

@@ -3,7 +3,6 @@
 #include <assert.h>
 #include "uwnet.h"
 
-
 // Run an activation layer on input
 // layer l: pointer to layer to run
 // matrix x: input to layer
@@ -18,7 +17,6 @@ matrix forward_activation_layer(layer l, matrix x)
     ACTIVATION a = l.activation;
     matrix y = copy_matrix(x);
 
-    // TODO: 2.1
     // apply the activation function to matrix y
     // logistic(x) = 1/(1+e^(-x))
     // relu(x)     = x if x > 0 else 0
@@ -27,7 +25,7 @@ matrix forward_activation_layer(layer l, matrix x)
 
     if (a == LOGISTIC) {
         for (int i = 0; i < x.rows * x.cols; i++) {
-            y.data[i] =  1 / (1 + exp(-1 * x.data[i]));
+            y.data[i] =  1 / (1 + exp(-1.0 * x.data[i]));
         }
     } else if (a == RELU) {
         for (int i = 0; i < x.rows * x.cols; i++) {
@@ -38,10 +36,10 @@ matrix forward_activation_layer(layer l, matrix x)
             y.data[i] = (x.data[i] > 0) ? x.data[i] : 0.01 * x.data[i];
         }
     } else if (a == SOFTMAX) {
-        int tmp[x.rows];
+        float tmp[x.rows];
 
         for (int i = 0; i <  x.rows; i++) {
-            int sum = 0;
+            float sum = 0;
             for (int j = 0; j < x.cols; j++) {
                 sum += exp(x.data[i * x.cols + j]);
             }
@@ -67,8 +65,7 @@ matrix backward_activation_layer(layer l, matrix dy)
     matrix x = *l.x;
     matrix dx = copy_matrix(dy);
     ACTIVATION a = l.activation;
-
-    // TODO: 2.2
+ 
     // calculate dL/dx = f'(x) * dL/dy
     // assume for this part that f'(x) = 1 for softmax because we will only use
     // it with cross-entropy loss for classification and include it in the loss
@@ -86,17 +83,17 @@ matrix backward_activation_layer(layer l, matrix dy)
         }
     } else if (a == RELU) {
         for (int i = 0; i < dy.rows * dy.cols; i++) {
-            dx.data[i] = (x.data[i] > 0) ? 1 : 0;
+            dx.data[i] = (x.data[i] > 0) ? 1.0 : 0;
             dx.data[i] *= dy.data[i];
         }
     } else if (a == LRELU) {
         for (int i = 0; i < dy.rows * dy.cols; i++) {
-           dx.data[i] = (x.data[i] > 0) ? 1 : 0.01;
+           dx.data[i] = (x.data[i] > 0) ? 1.0 : 0.01;
            dx.data[i] *= dy.data[i];
         }
     } else if (a == SOFTMAX) {
         for (int i = 0; i < dx.rows * dy.cols; i++) {
-            dx.data[i] = 1 * dy.data[i];
+            dx.data[i] = 1.0 * dy.data[i];
         }
     }
     return dx;
@@ -119,3 +116,4 @@ layer make_activation_layer(ACTIVATION a)
     l.update = update_activation_layer;
     return l;
 }
+

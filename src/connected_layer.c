@@ -48,7 +48,6 @@ matrix forward_connected_layer(layer l, matrix x)
     free_matrix(*l.x);
     *l.x = copy_matrix(x);
 
-    // TODO: 3.1 - run the network forward
     matrix y = matmul(x, l.w);
     y = forward_bias(y, l.b);
 
@@ -63,17 +62,24 @@ matrix backward_connected_layer(layer l, matrix dy)
 {
     matrix x = *l.x;
 
-    // TODO: 3.2
     // Calculate the gradient dL/db for the bias terms using backward_bias
     // add this into any stored gradient info already in l.db
-    axpy_matrix(1.0, backward_bias(dy), l.db);
+    matrix dldb = backward_bias(dy);
+    axpy_matrix(1.0, dldb, l.db);
+    free_matrix(dldb);
     
     // Then calculate dL/dw. Use axpy to add this dL/dw into any previously stored
     // updates for our weights, which are stored in l.dw
-    axpy_matrix(1.0, transpose_matrix(matmul(transpose_matrix(dy), x)), l.dw);
+    matrix x_t = transpose_matrix(x);
+    matrix dw = matmul(x_t, dy);
+    axpy_matrix(1.0, dw, l.dw);
+    free_matrix(x_t);
+    free_matrix(dw);
 
     // Calculate dL/dx and return it
-    matrix dx = matmul(dy, transpose_matrix(l.w));
+    matrix w_t = transpose_matrix(l.w);
+    matrix dx = matmul(dy, w_t);
+    free_matrix(w_t);
 
     return dx;
 }
@@ -84,8 +90,7 @@ matrix backward_connected_layer(layer l, matrix dy)
 // float momentum: SGD momentum term
 // float decay: l2 normalization term
 void update_connected_layer(layer l, float rate, float momentum, float decay)
-{
-    // TODO: 3.3
+{ 
     // Apply our updates using our SGD update rule
     // assume  l.dw = dL/dw - momentum * update_prev
     // we want l.dw = dL/dw - momentum * update_prev + decay * w
@@ -93,11 +98,11 @@ void update_connected_layer(layer l, float rate, float momentum, float decay)
     // lastly, l.dw is the negative update (-update) but for the next iteration
     // we want it to be (-momentum * update) so we just need to scale it a little
     axpy_matrix(decay, l.w, l.dw);
-    axpy_matrix(-1.0 * rate, l.dw, l.w);
+    axpy_matrix(-rate, l.dw, l.w);
     scal_matrix(momentum, l.dw);
 
     // Do the same for biases as well but no need to use weight decay on biases
-    axpy_matrix(-1.0 * rate, l.db, l.b);
+    axpy_matrix(-rate, l.db, l.b);
     scal_matrix(momentum, l.db);
 }
 
