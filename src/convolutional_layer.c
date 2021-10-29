@@ -48,6 +48,7 @@ matrix backward_convolutional_bias(matrix dy, int n)
 // returns: column matrix
 matrix im2col(image im, int size, int stride)
 {
+    //TODO: exchange x and y order. 
     int i, j, k;
     int outw = (im.w-1)/stride + 1;
     int outh = (im.h-1)/stride + 1;
@@ -58,7 +59,28 @@ matrix im2col(image im, int size, int stride)
     // TODO: 5.1
     // Fill in the column matrix with patches from the image
 
+    int first_center = (int) floor((size - 1) / 2.0);
+    for (int channel = 0; channel < im.c; channel++) {
+        for (int y = 0; y < im.h; y += stride) { // moving the kernel ahead in y direction.
+            for (int x = 0; x < im.w; x += stride) { // moving the kernel ahead in the x direction.
+                for (int y_kernel = 0; y_kernel < size; y_kernel++) {
+                    for (int x_kernel = 0; x_kernel < size; x_kernel++) {
+                        int value;
+                        // if (!(x > size/ 2 && y > size/2) || !((x < im.w - size/2) && (y < im.h - size/2))) { 
+                        if ( x_kernel < first_center || x_kernel >= (im.w + first_center) || y_kernel < first_center || y_kernel >= (im.h+first_center) ) {
+                            value = 0;
+                        } else {
+                            value = 100;
+                        }
 
+                        col.data[(channel*size*size + y_kernel*size + x_kernel)*col.cols + (x + y)] = value;
+                    }
+                }
+            }
+
+        }
+
+    }
 
     return col;
 }
