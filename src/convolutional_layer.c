@@ -69,8 +69,7 @@ matrix im2col(image im, int size, int stride)
 			int x_loc = x + x_kernel - first_center;
 			int y_loc = y + y_kernel - first_center;
 
-                        int value;
-                        // if (!(x > size/ 2 && y > size/2) || !((x < im.w - size/2) && (y < im.h - size/2))) { 
+                        float value; 
                         if ( x_loc < 0 || x_loc >= im.w || y_loc < 0 || y_loc >= im.h ) {
                             value = 0;
                         } else {
