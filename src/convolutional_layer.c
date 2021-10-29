@@ -81,10 +81,7 @@ matrix im2col(image im, int size, int stride)
                 }
 		column_index++;
             }
-
         }
-	return col;
-
     }
 
     return col;
