@@ -22,10 +22,9 @@ matrix forward_maxpool_layer(layer l, matrix in)
 
     // TODO: 6.1 - iterate over the input and fill in the output with max values
     int first_center = (l.size - 1) / 2;
+    int out_index = 0;
 	for (int channel = 0; channel < l.channels; channel++) {
-        int out_y = 0;
         for (int y = 0; y < l.height; y += l.stride) { // moving the kernel ahead in y direction.
-            int out_x = 0;
             for (int x = 0; x < l.width; x += l.stride) { // moving the kernel ahead in the x direction.
                 float kernal_max = 0;
                 for (int y_kernel = 0; y_kernel < l.size; y_kernel++) {
@@ -39,11 +38,10 @@ matrix forward_maxpool_layer(layer l, matrix in)
 
                     }
                 }
-                // out.data[channel*out.rows*out.cols + out_y*out.cols + out_x] = kernal_max;
+                out.data[out_index] = kernal_max;
                 
-                out_x++;
+                out_index++;
             }
-            out_y++;
         }
     }
 
