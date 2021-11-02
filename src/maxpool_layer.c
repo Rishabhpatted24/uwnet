@@ -73,22 +73,18 @@ matrix backward_maxpool_layer(layer l, matrix dy)
                     for (int x_kernel = 0; x_kernel < l.size; x_kernel++) {
 			            int x_loc = x + x_kernel - first_center;
 			            int y_loc = y + y_kernel - first_center;
-
                         if ( !(x_loc < 0 || x_loc >= l.width || y_loc < 0 || y_loc >= l.height) ) {
                             //kernal_max = kernal_max > in.data[channel*l.width*l.height + y_loc*l.width + x_loc] ? kernal_max : in.data[channel*l.width*l.height + y_loc*l.width + x_loc];
-                            if (kernal_max >  in.data[channel*l.width*l.height + y_loc*l.width + x_loc]) {
-                                dx.data[channel*l.width*l.height + kernal_max_y*l.width + kernal_max_x] = 0;
-                                
+                            if (in.data[channel*l.width*l.height + y_loc*l.width + x_loc] > kernal_max) {
                                 kernal_max_x = x_loc;
                                 kernal_max_y = y_loc;
                                 kernal_max =  in.data[channel*l.width*l.height + y_loc*l.width + x_loc];
                             } 
-
                         }
 
                     }
                 }
-                // we now know x and y
+
                 dx.data[channel*l.width*l.height + kernal_max_y*l.width + kernal_max_x] = dy.data[out_index];
                 out_index++;
             }
