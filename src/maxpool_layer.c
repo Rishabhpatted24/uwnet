@@ -23,24 +23,27 @@ matrix forward_maxpool_layer(layer l, matrix in)
     // TODO: 6.1 - iterate over the input and fill in the output with max values
     int first_center = (l.size - 1) / 2;
     int out_index = 0;
-	for (int channel = 0; channel < l.channels; channel++) {
-        for (int y = 0; y < l.height; y += l.stride) { // moving the kernel ahead in y direction.
-            for (int x = 0; x < l.width; x += l.stride) { // moving the kernel ahead in the x direction.
-                float kernal_max = 0;
-                for (int y_kernel = 0; y_kernel < l.size; y_kernel++) {
-                    for (int x_kernel = 0; x_kernel < l.size; x_kernel++) {
-			            int x_loc = x + x_kernel - first_center;
-			            int y_loc = y + y_kernel - first_center;
+    for (int img = 0; img < in.rows; img++) {
+        for (int channel = 0; channel < l.channels; channel++) {
+            for (int y = 0; y < l.height; y += l.stride) { // moving the kernel ahead in y direction.
+                for (int x = 0; x < l.width; x += l.stride) { // moving the kernel ahead in the x direction.
+                    float kernal_max = 0;
+                    for (int y_kernel = 0; y_kernel < l.size; y_kernel++) {
+                        for (int x_kernel = 0; x_kernel < l.size; x_kernel++) {
+			    int x_loc = x + x_kernel - first_center;
+			    int y_loc = y + y_kernel - first_center;
 
-                        if ( !(x_loc < 0 || x_loc >= l.width || y_loc < 0 || y_loc >= l.height) ) {
-                            kernal_max = kernal_max > in.data[channel*l.width*l.height + y_loc*l.width + x_loc] ? kernal_max : in.data[channel*l.width*l.height + y_loc*l.width + x_loc];
+                            if ( !(x_loc < 0 || x_loc >= l.width || y_loc < 0 || y_loc >= l.height) ) {
+                                if (in.data[img*out.cols + channel*l.width*l.height + y_loc*l.width + x_loc] > kernal_max) {
+                                    kernal_max =  in.data[img*in.cols + channel*l.width*l.height + y_loc*l.width + x_loc];
+                                } 
+                            }
+
                         }
-
                     }
+                    out.data[out_index] = kernal_max; 
+                    out_index++;
                 }
-                out.data[out_index] = kernal_max;
-                
-                out_index++;
             }
         }
     }
@@ -61,30 +64,33 @@ matrix backward_maxpool_layer(layer l, matrix dy)
     // TODO: 6.2 - find the max values in the input again and fill in the
     // corresponding delta with the delta from the output. This should be
     // similar to the forward method in structure.
+    
     int first_center = (l.size - 1) / 2;
     int out_index = 0;
+    for (int img = 0; img < dx.rows; img++) {
 	for (int channel = 0; channel < l.channels; channel++) {
-        for (int y = 0; y < l.height; y += l.stride) { // moving the kernel ahead in y direction.
-            for (int x = 0; x < l.width; x += l.stride) { // moving the kernel ahead in the x direction.
-                float kernal_max = 0;
-                int kernal_max_x = 0;
-                int kernal_max_y = 0;
-                for (int y_kernel = 0; y_kernel < l.size; y_kernel++) {
-                    for (int x_kernel = 0; x_kernel < l.size; x_kernel++) {
-			            int x_loc = x + x_kernel - first_center;
-			            int y_loc = y + y_kernel - first_center;
-                        if (!(x_loc < 0 || x_loc >= l.width || y_loc < 0 || y_loc >= l.height) ) {
-                            if (in.data[channel*l.width*l.height + y_loc*l.width + x_loc] > kernal_max) {
-                                kernal_max_x = x_loc;
-                                kernal_max_y = y_loc;
-                                kernal_max =  in.data[channel*l.width*l.height + y_loc*l.width + x_loc];
-                            } 
-                        }
+            for (int y = 0; y < l.height; y += l.stride) { // moving the kernel ahead in y direction.
+                for (int x = 0; x < l.width; x += l.stride) { // moving the kernel ahead in the x direction.
+                    float kernal_max = 0;
+                    int kernal_max_x = 0;
+                    int kernal_max_y = 0;
+                    for (int y_kernel = 0; y_kernel < l.size; y_kernel++) {
+                        for (int x_kernel = 0; x_kernel < l.size; x_kernel++) {
+			    int x_loc = x + x_kernel - first_center;
+			    int y_loc = y + y_kernel - first_center;
+                            if (!(x_loc < 0 || x_loc >= l.width || y_loc < 0 || y_loc >= l.height) ) {
+                                if (in.data[img*in.cols + channel*l.width*l.height + y_loc*l.width + x_loc] > kernal_max) {
+                                    kernal_max_x = x_loc;
+                                    kernal_max_y = y_loc;
+                                    kernal_max =  in.data[img*in.cols + channel*l.width*l.height + y_loc*l.width + x_loc];
+                                }
+                            }
 
+                        }
                     }
+                    dx.data[img*dx.cols + channel*l.width*l.height + kernal_max_y*l.width + kernal_max_x] += dy.data[out_index];
+                    out_index++;
                 }
-                dx.data[channel*l.width*l.height + kernal_max_y*l.width + kernal_max_x] += dy.data[out_index];
-                out_index++;
             }
         }
     }
