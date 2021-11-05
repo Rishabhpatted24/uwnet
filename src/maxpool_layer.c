@@ -66,8 +66,8 @@ matrix backward_maxpool_layer(layer l, matrix dy)
     // similar to the forward method in structure.
 
     int first_center = (l.size - 1) / 2;
-    int out_index = 0;
     for (int i = 0; i < in.rows; i++) {
+	int out_index = 0;
 	image example = float_to_image(in.data + i*in.cols, l.width, l.height, l.channels);
 	for (int channel = 0; channel < l.channels; channel++) {
             for (int y = 0; y < l.height; y += l.stride) { // moving the kernel ahead in y direction.
@@ -89,7 +89,7 @@ matrix backward_maxpool_layer(layer l, matrix dy)
 
                         }
                     }
-                    dx.data[i*dx.cols + channel*l.width*l.height + kernal_max_y*l.width + kernal_max_x] += dy.data[out_index];
+                    dx.data[i*dx.cols + channel*l.width*l.height + kernal_max_y*l.width + kernal_max_x] += dy.data[i*dy.cols + out_index];
                     out_index++;
                 }
             }
