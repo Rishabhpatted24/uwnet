@@ -24,6 +24,7 @@ matrix forward_maxpool_layer(layer l, matrix in)
     int first_center = (l.size - 1) / 2;
     int out_index = 0;
     for (int img = 0; img < in.rows; img++) {
+	printf("%i %i \n", img, in.cols);
         for (int channel = 0; channel < l.channels; channel++) {
             for (int y = 0; y < l.height; y += l.stride) { // moving the kernel ahead in y direction.
                 for (int x = 0; x < l.width; x += l.stride) { // moving the kernel ahead in the x direction.
@@ -46,8 +47,8 @@ matrix forward_maxpool_layer(layer l, matrix in)
                 }
             }
         }
+	printf("%i \n", out_index);
     }
-
     return out;
 }
 
