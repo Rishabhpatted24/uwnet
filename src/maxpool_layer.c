@@ -83,6 +83,7 @@ matrix backward_maxpool_layer(layer l, matrix dy)
                                 if (example.data[channel*l.width*l.height + y_loc*l.width + x_loc] > kernal_max) {
                                     kernal_max_x = x_loc;
                                     kernal_max_y = y_loc;
+
                                     kernal_max = example.data[channel*l.width*l.height + y_loc*l.width + x_loc];
                                 }
                             }

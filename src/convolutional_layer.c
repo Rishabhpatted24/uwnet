@@ -47,8 +47,7 @@ matrix backward_convolutional_bias(matrix dy, int n)
 // int stride: stride for convolution
 // returns: column matrix
 matrix im2col(image im, int size, int stride)
-{
-    //TODO: exchange x and y order. 
+{ 
     int i, j, k;
     int outw = (im.w-1)/stride + 1;
     int outh = (im.h-1)/stride + 1;
