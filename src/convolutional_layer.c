@@ -56,9 +56,7 @@ matrix im2col(image im, int size, int stride)
     int cols = outw * outh;
     matrix col = make_matrix(rows, cols);
 
-    // TODO: 5.1
     // Fill in the column matrix with patches from the image
-
     int first_center = (size - 1) / 2;
     for (int channel = 0; channel < im.c; channel++) {
 	    int column_index = 0;
@@ -100,7 +98,6 @@ image col2im(int width, int height, int channels, matrix col, int size, int stri
     int outw = (im.w-1)/stride + 1;
     int rows = im.c*size*size;
 
-    // TODO: 5.2
     // Add values into image im from the column matrix
     int first_center = (size - 1) / 2;
     for (int channel = 0; channel < im.c; channel++) {

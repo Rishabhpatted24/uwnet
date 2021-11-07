@@ -20,7 +20,7 @@ matrix forward_maxpool_layer(layer l, matrix in)
     int outh = (l.height-1)/l.stride + 1;
     matrix out = make_matrix(in.rows, outw*outh*l.channels);
 
-    // TODO: 6.1 - iterate over the input and fill in the output with max values
+    // iterate over the input and fill in the output with max values
     int first_center = (l.size - 1) / 2;
     int out_index = 0;
     for (int i = 0; i < in.rows; i++) {
@@ -61,10 +61,10 @@ matrix backward_maxpool_layer(layer l, matrix dy)
 
     int outw = (l.width-1)/l.stride + 1;
     int outh = (l.height-1)/l.stride + 1;
-    // TODO: 6.2 - find the max values in the input again and fill in the
+
+    // find the max values in the input again and fill in the
     // corresponding delta with the delta from the output. This should be
     // similar to the forward method in structure.
-
     int first_center = (l.size - 1) / 2;
     for (int i = 0; i < in.rows; i++) {
 	int out_index = 0;
