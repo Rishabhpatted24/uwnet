@@ -58,11 +58,11 @@ print("test accuracy:     %f", accuracy_net(m, test))
 # Why are you seeing these results? Speculate based on the information you've gathered and what you know about DL and ML.
 # Your answer:
 # 
-# The number of operations for 1 forward pass through the convolutional network for a single image is: 1,108,480.
+# The number of operations for 1 forward pass through the convolutional network is: 1,108,480.
 # The convolutional network's train accuracy was: 70.51799893379211%
 # The convolutional network's test accuracy was: 65.75999855995178%
 #
-# The number of operations for 1 forward pass through the connected network for a single image is: 1,108,160.
+# The number of operations for 1 forward pass through the connected network is: 1,108,160.
 # The connected network's train accuracy was: 53.79199981689453%
 # The connected network's test accuracy was: 49.75999891757965%
 #
