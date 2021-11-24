@@ -1,14 +1,18 @@
 from uwnet import *
 def conv_net():
     l = [   make_convolutional_layer(32, 32, 3, 8, 3, 2),
+            make_batchnorm_layer(8),
             make_activation_layer(RELU),
             make_maxpool_layer(16, 16, 8, 3, 2),
             make_convolutional_layer(8, 8, 8, 16, 3, 1),
+            make_batchnorm_layer(16),
             make_activation_layer(RELU),
             make_maxpool_layer(8, 8, 16, 3, 2),
             make_convolutional_layer(4, 4, 16, 32, 3, 1),
+            make_batchnorm_layer(32),
             make_activation_layer(RELU),
             make_connected_layer(512, 10),
+            make_batchnorm_layer(10),
             make_activation_layer(SOFTMAX)]
     return make_net(l)
 
@@ -38,3 +42,11 @@ print("test accuracy:     %f", accuracy_net(m, test))
 
 # 7.6 Question: What do you notice about training the convnet with/without batch normalization? How does it affect convergence? How does it affect what magnitude of learning rate you can use? Write down any observations from your experiments:
 # TODO: Your answer
+
+# evaluating model without batch normalization
+# training accuracy: %f 0.4067800045013428
+# test accuracy:     %f 0.40619999170303345
+
+# evaluating model with batch normalization
+# training accuracy: %f 0.5407000184059143
+# test accuracy:     %f 0.5342000126838684
