@@ -12,7 +12,6 @@ def conv_net():
             make_batchnorm_layer(32),
             make_activation_layer(RELU),
             make_connected_layer(512, 10),
-            make_batchnorm_layer(10),
             make_activation_layer(SOFTMAX)]
     return make_net(l)
 
@@ -41,12 +40,27 @@ print("training accuracy: %f", accuracy_net(m, train))
 print("test accuracy:     %f", accuracy_net(m, test))
 
 # 7.6 Question: What do you notice about training the convnet with/without batch normalization? How does it affect convergence? How does it affect what magnitude of learning rate you can use? Write down any observations from your experiments:
-# TODO: Your answer
+# TODO: 
 
-# evaluating model without batch normalization
-# training accuracy: %f 0.4067800045013428
-# test accuracy:     %f 0.40619999170303345
+# When training the convnet with batch normalization there was a significant increase (~13-14%) in training and testing accuracy. 
+# Learning Rate: 0.01
+#    For the convnet without batch normalization the training accuracy was 40.67800045013428% and test accuracy was 40.619999170303345%.
+#    For the convnet with batch normalization the training accuracy was 54.1700005531311% and test accuracy was 53.21000218391418%.
 
-# evaluating model with batch normalization
-# training accuracy: %f 0.5407000184059143
-# test accuracy:     %f 0.5342000126838684
+# The convnet with batch normalization also converges much faster than the convnet as its loss decreases at a higher rate.
+
+# Also, while the convnet with batch normalization could use learning rates between 0.01 and 0.1, using a high learning rate for a convnet without batchnormalization made it return much worse results:
+# Learning rate: 0.1
+#    For the convnet without batch normalization the training accuracy was 10.000000149011612% and test accuracy was 10.000000149011612%.
+#    For the convnet with batch normalization the training accuracy was 52.8980016708374% and test accuracy was 52.0799994468689%.
+# Learning rate: 0.07
+#    For the convnet without batch normalization the training accuracy was 45.719999074935913% and test accuracy was 45.419999957084656%.
+#    For the convnet with batch normalization the training accuracy was 54.39800024032593% and test accuracy was 52.96000242233276%.
+# Learning rate: 0.05
+#    For the convnet without batch normalization the training accuracy was 47.21600115299225% and test accuracy was 47.02000021934509%.
+#    For the convnet with batch normalization the training accuracy was 55.49200177192688% and test accuracy was 54.43999767303467%.
+# Learning rate: 0.03 (BEST PERFORMANCE)
+#    For the convnet without batch normalization the training accuracy was 47.284001111984253% and test accuracy was 46.75000011920929%.
+#    For the convnet with batch normalization the training accuracy was 55.4419994354248% and test accuracy was 54.54000234603882%.
+# Thus, it seems that a convnet with batch normalization can use a more flexible learning rate value, while a convnet without batch normalization needs a smaller learning rate.
+# The best performance for both models occured when using a learning rate of 0.03.
